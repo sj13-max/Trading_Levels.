@@ -1,0 +1,24 @@
+name: Atualizador GEX
+on:
+  schedule:
+    - cron: '0 9 * * 1-5' # Roda todo dia útil às 09:00 UTC
+  workflow_dispatch: # Permite rodar manualmente clicando no botão
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Rodar Script
+        run: python update_gex.py
+      - name: Commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "Niveis Atualizados via Bot"
+          git push
